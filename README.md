@@ -35,20 +35,73 @@ Everything currently references the **RTX 3060 Ti + Ryzen 3700X** lab box used i
 
 ## 3. Planned Scope
 
-1. **Phase 1 — ONNX Runtime (CUDAExecutionProvider)**  
-   - Re-run the seeded CPU vs GPU experiments on the current Ada/Lovelace hardware target  
-   - Collect per-kernel timelines via ORT profiling + Nsight Systems where possible  
-   - Validate reproducibility against the provided PNGs
+### Phase 1 — ORT + CUDA EP: establish ground truth
 
-2. **Phase 2 — ONNX Runtime (TensorrtExecutionProvider)**  
-   - Enable TensorRT EP inside ORT, keeping CPU fallback on  
-   - Measure graph partitioning, engine build time, and steady-state latency  
-   - Compare against CUDA EP to isolate TensorRT-specific gains/regressions
+Purpose: Identify real bottlenecks before introducing aggressive compiler/runtime transformations.
 
-3. **Phase 3 — Native TensorRT Pipeline**  
-   - Export TRT engines (either via `trtexec` or Python API)  
-   - Benchmark outside ORT to quantify orchestration overhead  
-   - Analyze precision (FP32/FP16/INT8) trade-offs for tiny vs large transformers
+What to emphasize:
+
+Fixed input regimes (batch / sequence length)
+
+Nsight Systems + Compute used to answer:
+
+where time is actually spent,
+
+how much is kernel launch vs math,
+
+where CPU↔GPU synchronization appears.
+
+Findings framed as constraints (not optimizations yet).
+
+Example wording:
+
+“Used ORT + CUDA EP to establish a reproducible performance baseline and identify dominant execution bottlenecks under controlled Transformer input regimes.”
+
+### Phase 2 — ORT + TensorRT EP: controlled acceleration & attribution
+
+Purpose: Introduce TensorRT selectively while preserving framework-level structure.
+
+What to emphasize:
+
+Partial graph conversion
+
+Identification of:
+
+which subgraphs convert,
+
+where dynamic shapes prevent fusion,
+
+where fallbacks occur.
+
+Insight into why acceleration is limited.
+
+Example wording:
+
+“Integrated TensorRT via ORT’s execution provider to study subgraph conversion, fusion boundaries, and shape-driven fragmentation without abandoning the ONNX runtime.”
+
+This sounds extremely intentional.
+
+### Phase 3 — Native TensorRT: manual optimization ceiling
+
+Purpose: Remove abstraction limits and push maximum performance for known regimes.
+
+What to emphasize:
+
+Explicit optimization profiles
+
+Precision control (FP16 / INT8 if applicable)
+
+Engine-level profiling correlated with Nsight
+
+Tradeoffs:
+
+latency vs throughput,
+
+flexibility vs determinism.
+
+Example wording:
+
+“Transitioned to native TensorRT to manually define optimization profiles and precision strategies, enabling deeper fusion and higher throughput once input distributions were well-characterized.”
 
 Each phase will mirror the documentation style of the CoreML project: qualitative summary in the README, quantitative details in appendices plus `results/txt/` profile dumps.
 
