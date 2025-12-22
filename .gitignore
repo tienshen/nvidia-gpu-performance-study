@@ -71,6 +71,10 @@ logs/
 *.nsys-rep
 *.sqlite
 
+# ONNX Runtime profiles (keep summaries)
+results/ort-cuda/profiles/
+!results/ort-cuda/profile-summary/
+
 # TensorRT
 *.plan
 trt_engines/
