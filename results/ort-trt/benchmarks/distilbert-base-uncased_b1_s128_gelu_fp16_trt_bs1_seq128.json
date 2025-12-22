@@ -1,0 +1,14 @@
+{
+  "host": "DESKTOP-DIA8VEH",
+  "model": "distilbert-base-uncased_b1_s128_gelu_fp16",
+  "backend": "tensorrt",
+  "batch_size": 1,
+  "seq_len": 128,
+  "runs": 100,
+  "mean_latency_ms": 2.897871999999957,
+  "std_latency_ms": 2.35354459601194,
+  "p50_ms": 1.4912500000008322,
+  "p90_ms": 6.344120000001752,
+  "p99_ms": 11.122187000002699,
+  "throughput": 345.08080412109814
+}
