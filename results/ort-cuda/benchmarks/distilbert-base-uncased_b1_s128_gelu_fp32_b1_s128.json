@@ -1,0 +1,13 @@
+{
+  "model": "distilbert-base-uncased_b1_s128_gelu_fp32",
+  "backend": "ort-cuda",
+  "batch_size": 1,
+  "seq_len": 128,
+  "runs": 100,
+  "mean_latency_ms": 5.007077999999994,
+  "std_latency_ms": 1.4528956067508711,
+  "p50_ms": 4.619249999999964,
+  "p90_ms": 5.669129999999945,
+  "p99_ms": 10.875451000000135,
+  "throughput_samples_per_sec": 199.71728021812348
+}
