@@ -4,7 +4,7 @@ import numpy as np
 import json
 import socket
 import onnxruntime as ort
-from requests import session
+from pathlib import Path
 
 MODEL_NAME = "bert-base-uncased"
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", f"{MODEL_NAME}.onnx")
@@ -12,6 +12,8 @@ BATCH_SIZE = 1
 SEQ_LEN = 128
 WARMUP = 10
 RUNS = 100
+ENABLE_PROFILING = False
+PROFILE_DIR = None
 
 def make_dummy_input(input_def):
     shape = [BATCH_SIZE, SEQ_LEN]
@@ -30,8 +32,27 @@ def main():
     
     print(f"Loading ONNX model from {MODEL_PATH}")
 
+    sess_options = ort.SessionOptions()
+    
+    # Enable profiling if requested
+    profile_output = None
+    if ENABLE_PROFILING:
+        profile_dir = Path(PROFILE_DIR)
+        profile_dir.mkdir(parents=True, exist_ok=True)
+        profile_output = profile_dir / f"{MODEL_NAME}_b{BATCH_SIZE}_s{SEQ_LEN}_profile.json"
+        
+        # Remove existing profile if it exists
+        if profile_output.exists():
+            profile_output.unlink()
+        
+        sess_options.enable_profiling = True
+        sess_options.profile_file_prefix = str(profile_output.with_suffix(''))
+        print(f"Profiling enabled: {profile_output}")
+    
     session = ort.InferenceSession(
-        MODEL_PATH, providers=["CUDAExecutionProvider"]  # force GPU, no CPU fallback
+        MODEL_PATH,
+        sess_options=sess_options,
+        providers=["CUDAExecutionProvider"]  # force GPU, no CPU fallback
     )
     print("Session providers:", session.get_providers())
 
@@ -78,6 +99,14 @@ def main():
     print(f"Mean latency: {summary['mean_latency_ms']:.2f} ms")
     print(f"Throughput: {summary['throughput']:.2f} inferences/sec")
 
+    # End profiling and rename to remove timestamp
+    if ENABLE_PROFILING:
+        profile_file_with_timestamp = session.end_profiling()
+        # Rename to remove timestamp
+        import shutil
+        shutil.move(profile_file_with_timestamp, str(profile_output))
+        print(f"Profile saved to: {profile_output}")
+
     os.makedirs("results/raw", exist_ok=True)
     out_path = os.path.join(
         "results", "raw",
@@ -96,10 +125,15 @@ if __name__ == "__main__":
                         help="Hugging Face model name (used as ONNX filename)")
     parser.add_argument("--batch", type=int, default=1, help="Batch size")
     parser.add_argument("--seq-len", type=int, default=128, help="Sequence length")
+    parser.add_argument("--profile", action="store_true", help="Enable ONNX Runtime profiling")
+    parser.add_argument("--profile-dir", type=str, default="results/ort-cuda/profiles",
+                        help="Directory to save profile data")
     args = parser.parse_args()
 
     MODEL_NAME = args.model # override the constant
     MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", f"{MODEL_NAME}.onnx") # update model path
     BATCH_SIZE = args.batch  # override the constant
     SEQ_LEN = args.seq_len  # override the constant
+    ENABLE_PROFILING = args.profile
+    PROFILE_DIR = args.profile_dir
     main()
