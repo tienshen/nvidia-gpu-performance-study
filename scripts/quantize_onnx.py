@@ -10,6 +10,37 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from bench.models import ensure_models_dir
 
 
+def create_calibration_data_reader():
+    """Create a calibration data reader for static quantization."""
+    import numpy as np
+    
+    class CalibrationDataReader:
+        def __init__(self, num_samples=20):
+            self.num_samples = num_samples
+            self.batch_size = 1
+            self.seq_len = 128
+            self.vocab_size = 30522
+            self.current_sample = 0
+            
+        def get_next(self):
+            if self.current_sample >= self.num_samples:
+                return None
+            
+            # Generate random calibration data
+            input_ids = np.random.randint(0, self.vocab_size, 
+                                         size=(self.batch_size, self.seq_len), 
+                                         dtype=np.int64)
+            attention_mask = np.ones((self.batch_size, self.seq_len), dtype=np.int64)
+            
+            self.current_sample += 1
+            return {
+                'input_ids': input_ids,
+                'attention_mask': attention_mask
+            }
+    
+    return CalibrationDataReader()
+
+
 def quantize_model(input_path: str, output_path: str, quantization_mode: str = "dynamic"):
     """
     Quantize an ONNX model to INT8.
@@ -20,7 +51,7 @@ def quantize_model(input_path: str, output_path: str, quantization_mode: str = "
         quantization_mode: 'dynamic' or 'static' quantization
     """
     try:
-        from onnxruntime.quantization import quantize_dynamic, QuantType
+        from onnxruntime.quantization import quantize_dynamic, quantize_static, QuantType, QuantFormat
         import onnx
     except ImportError:
         print("Error: onnxruntime.quantization not available")
@@ -44,8 +75,26 @@ def quantize_model(input_path: str, output_path: str, quantization_mode: str = "
             weight_type=QuantType.QInt8,
         )
     else:
-        print("Error: Static quantization not yet implemented (requires calibration data)")
-        sys.exit(1)
+        # Static quantization with calibration
+        print("Generating calibration data (20 samples)...")
+        calibration_data_reader = create_calibration_data_reader()
+        
+        # For TensorRT: symmetric activation and weight quantization
+        extra_options = {
+            'ActivationSymmetric': True,  # Symmetric activation quantization (zero point = 0)
+            'WeightSymmetric': True,      # Symmetric weight quantization (default is True)
+        }
+        
+        quantize_static(
+            model_input=str(input_path),
+            model_output=str(output_path),
+            calibration_data_reader=calibration_data_reader,
+            quant_format=QuantFormat.QDQ,  # QDQ format for better TensorRT compatibility
+            activation_type=QuantType.QInt8,
+            weight_type=QuantType.QInt8,
+            extra_options=extra_options,
+        )
+        print("Calibration complete")
     
     # Check output size
     output_model = Path(output_path)
