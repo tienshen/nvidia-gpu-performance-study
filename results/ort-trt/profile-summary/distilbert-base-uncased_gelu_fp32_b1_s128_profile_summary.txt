@@ -1,0 +1,14 @@
+﻿Profile: C:\Users\Tien\Documents\ml-bench-projects\nvidia-gpu-performance-study\results\ort-trt\profiles\distilbert-base-uncased_gelu_fp32_b1_s128_profile.json
+Events used: 332
+Total (dur sum): 20209.65 ms
+
+Top categories by time:
+  Session: 13804.05 ms
+  Node: 6405.60 ms
+
+Top 50 names by time:
+  model_run                                                                                                                   6419.85 ms  (110 events)
+  SequentialExecutor::Execute                                                                                                 6406.73 ms  (110 events)
+  TensorrtExecutionProvider_TRTKernel_graph_main_graph_6165930831101824582_0_0_kernel_time                                    6405.60 ms  (110 events)
+  session_initialization                                                                                                       847.57 ms  (1 events)
+  model_loading_uri                                                                                                            129.90 ms  (1 events)
