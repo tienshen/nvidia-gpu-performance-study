@@ -37,7 +37,7 @@ def main():
         cuda_benchmarks[data['model']] = data
     
     # Load TensorRT EP benchmarks
-    trt_dir = Path("results/ort-trt/benchmarks")
+    trt_dir = Path("results/ort-tensorrt/benchmarks")
     trt_benchmarks = {}
     for json_file in trt_dir.glob("distilbert*.json"):
         data = load_benchmark(json_file)

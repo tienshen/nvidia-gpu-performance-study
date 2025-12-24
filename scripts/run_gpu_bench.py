@@ -102,7 +102,7 @@ def main():
 
     # Determine backend label and output directory based on EP
     backend_label = "tensorrt" if EXECUTION_PROVIDER == "tensorrt" else "gpu"
-    output_dir = "ort-trt" if EXECUTION_PROVIDER == "tensorrt" else "ort-cuda"
+    output_dir = "ort-tensorrt" if EXECUTION_PROVIDER == "tensorrt" else "ort-cuda"
     filename_suffix = "trt" if EXECUTION_PROVIDER == "tensorrt" else "gpu"
     
     # Save results to json
@@ -173,6 +173,8 @@ if __name__ == "__main__":
     if args.profile_dir:
         PROFILE_DIR = args.profile_dir
     else:
-        PROFILE_DIR = f"results/ort-{args.ep}/profiles"
+        # Use consistent naming: ort-tensorrt for tensorrt, ort-cuda for cuda
+        ep_dir = "ort-tensorrt" if args.ep == "tensorrt" else "ort-cuda"
+        PROFILE_DIR = f"results/{ep_dir}/profiles"
     
     main()

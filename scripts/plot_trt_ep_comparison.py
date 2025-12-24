@@ -11,7 +11,7 @@ def load_benchmark(path):
 
 def main():
     # Load all benchmark results
-    benchmark_dir = Path("results/ort-trt/benchmarks")
+    benchmark_dir = Path("results/ort-tensorrt/benchmarks")
     
     benchmarks = []
     for json_file in benchmark_dir.glob("distilbert*.json"):
@@ -83,7 +83,7 @@ def main():
     plt.tight_layout()
     
     # Save plot
-    output_dir = Path("results/ort-trt/plots")
+    output_dir = Path("results/ort-tensorrt/plots")
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "distilbert_config_comparison.png"
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
