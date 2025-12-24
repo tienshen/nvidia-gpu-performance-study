@@ -1,0 +1,14 @@
+{
+  "host": "DESKTOP-DIA8VEH",
+  "model": "distilbert-base-uncased_b1_s128_fast-gelu_fp16",
+  "backend": "gpu",
+  "batch_size": 1,
+  "seq_len": 128,
+  "runs": 100,
+  "mean_latency_ms": 7.670225000000002,
+  "std_latency_ms": 2.2378505960575166,
+  "p50_ms": 7.097550000000008,
+  "p90_ms": 8.774410000000033,
+  "p99_ms": 17.914080999999907,
+  "throughput": 130.3742719411751
+}

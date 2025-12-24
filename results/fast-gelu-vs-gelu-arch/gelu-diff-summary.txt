@@ -1,0 +1,23 @@
+TensorRT Fast-GELU FP16 shows performance degradation compared to regular GELU FP16 (2.78ms vs 0.89ms), 
+suggesting the FP16 export or TensorRT optimization isn't working optimally for this combination
+
+Model Architectural Differences:
+
+Fast-GELU FP16 has 30 more nodes (534 vs 504)
++24 Mul operations - the tanh approximation requires more multiplications
++6 Tanh operations - replacing the 6 Erf operations in regular GELU
+-6 Div operations - slight simplification in some paths
+
+TensorRT's FP16 Erf implementation is highly optimized, 
+while the Tanh FP16 path is less optimized, resulting in 3.1x slower execution despite the mathematical "simplification."
+
+The ONNX model export level analysis shows us what operations TensorRT receives, 
+but the runtime profiling shows us how TensorRT actually executes them. 
+The fact that TensorRT fuses both into single kernels but produces different performance suggests 
+TensorRT has asymmetric FP16 optimization for Erf vs Tanh operations in its fusion codegen.
+One hypothesis is that fast-relu is having partial fp32 fallbacks inside trt or different graph partitioning / extra boundary reformat kernels
+However, We are unable to gather more evidence since profiling shows the entire infererence as 1 fused kernel,
+just like all other model configurations we ran on trt-ep
+
+This counter-intuitive observation only makes it more worth-while to optimize fast-gelu fp16 kernel-fusion when we move to
+native tensorRT stack

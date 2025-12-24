@@ -1,0 +1,39 @@
+{
+  "summary": {
+    "gelu_fp16_total_nodes": 504,
+    "fast_gelu_fp16_total_nodes": 534,
+    "node_difference": 30
+  },
+  "op_type_comparison": {
+    "Add": {
+      "gelu_fp16": 87,
+      "fast_gelu_fp16": 93,
+      "difference": 6
+    },
+    "Constant": {
+      "gelu_fp16": 94,
+      "fast_gelu_fp16": 100,
+      "difference": 6
+    },
+    "Div": {
+      "gelu_fp16": 25,
+      "fast_gelu_fp16": 19,
+      "difference": -6
+    },
+    "Erf": {
+      "gelu_fp16": 6,
+      "fast_gelu_fp16": 0,
+      "difference": -6
+    },
+    "Mul": {
+      "gelu_fp16": 38,
+      "fast_gelu_fp16": 62,
+      "difference": 24
+    },
+    "Tanh": {
+      "gelu_fp16": 0,
+      "fast_gelu_fp16": 6,
+      "difference": 6
+    }
+  }
+}

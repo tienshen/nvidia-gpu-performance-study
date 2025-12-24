@@ -1,0 +1,5464 @@
+{
+  "total_nodes": 534,
+  "node_type_counts": {
+    "Constant": 100,
+    "Add": 93,
+    "Mul": 62,
+    "MatMul": 48,
+    "Cast": 47,
+    "Sqrt": 31,
+    "ReduceMean": 26,
+    "Reshape": 24,
+    "Transpose": 24,
+    "Div": 19,
+    "Sub": 14,
+    "Pow": 13,
+    "Shape": 6,
+    "Slice": 6,
+    "Softmax": 6,
+    "Tanh": 6,
+    "Gather": 2,
+    "Unsqueeze": 2,
+    "Where": 2,
+    "ConstantOfShape": 1,
+    "Equal": 1,
+    "Expand": 1
+  },
+  "nodes": [
+    {
+      "name": "/embeddings/word_embeddings/Gather",
+      "op_type": "Gather",
+      "inputs": [
+        "embeddings.word_embeddings.weight",
+        "input_ids"
+      ],
+      "outputs": [
+        "/embeddings/word_embeddings/Gather_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/embeddings/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/position_embeddings/Gather",
+      "op_type": "Gather",
+      "inputs": [
+        "embeddings.position_embeddings.weight",
+        "/embeddings/Constant_output_0"
+      ],
+      "outputs": [
+        "/embeddings/position_embeddings/Gather_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/embeddings/word_embeddings/Gather_output_0",
+        "/embeddings/position_embeddings/Gather_output_0"
+      ],
+      "outputs": [
+        "/embeddings/Add_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/embeddings/Add_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/embeddings/Add_output_0",
+        "/embeddings/LayerNorm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/embeddings/LayerNorm/Sub_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/embeddings/LayerNorm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/embeddings/LayerNorm/Cast_output_0",
+        "/embeddings/LayerNorm/Constant_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/embeddings/LayerNorm/Pow_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/embeddings/LayerNorm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/embeddings/LayerNorm/ReduceMean_1_output_0",
+        "/embeddings/LayerNorm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/embeddings/LayerNorm/Add_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/embeddings/LayerNorm/Cast_output_0",
+        "/embeddings/LayerNorm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/embeddings/LayerNorm/Div_output_0"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/embeddings/LayerNorm/Cast_1_output_0",
+        "embeddings.LayerNorm.weight"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/embeddings/LayerNorm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/embeddings/LayerNorm/Mul_output_0",
+        "embeddings.LayerNorm.bias"
+      ],
+      "outputs": [
+        "/embeddings/LayerNorm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/Unsqueeze",
+      "op_type": "Unsqueeze",
+      "inputs": [
+        "attention_mask",
+        "/Constant_output_0"
+      ],
+      "outputs": [
+        "/Unsqueeze_output_0"
+      ]
+    },
+    {
+      "name": "/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/Unsqueeze_1",
+      "op_type": "Unsqueeze",
+      "inputs": [
+        "/Unsqueeze_output_0",
+        "/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/Unsqueeze_1_output_0"
+      ]
+    },
+    {
+      "name": "/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/ConstantOfShape",
+      "op_type": "ConstantOfShape",
+      "inputs": [
+        "/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/ConstantOfShape_output_0"
+      ]
+    },
+    {
+      "name": "/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/ConstantOfShape_output_0",
+        "/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/Equal",
+      "op_type": "Equal",
+      "inputs": [
+        "/Constant_2_output_0",
+        "/Mul_output_0"
+      ],
+      "outputs": [
+        "/Equal_output_0"
+      ]
+    },
+    {
+      "name": "/Where",
+      "op_type": "Where",
+      "inputs": [
+        "/Equal_output_0",
+        "/ConstantOfShape_output_0",
+        "/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/Where_output_0"
+      ]
+    },
+    {
+      "name": "/Expand",
+      "op_type": "Expand",
+      "inputs": [
+        "/Unsqueeze_1_output_0",
+        "/Where_output_0"
+      ],
+      "outputs": [
+        "/Expand_output_0"
+      ]
+    },
+    {
+      "name": "/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/Expand_output_0"
+      ],
+      "outputs": [
+        "/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/Constant_5_output_0",
+        "/Cast_output_0"
+      ],
+      "outputs": [
+        "/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/Sub_output_0"
+      ],
+      "outputs": [
+        "/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/Cast_2",
+      "op_type": "Cast",
+      "inputs": [
+        "/Cast_1_output_0"
+      ],
+      "outputs": [
+        "/Cast_2_output_0"
+      ]
+    },
+    {
+      "name": "/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/Where_1",
+      "op_type": "Where",
+      "inputs": [
+        "/Cast_2_output_0",
+        "/Constant_6_output_0",
+        "/Sub_output_0"
+      ],
+      "outputs": [
+        "/Where_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/q_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/embeddings/LayerNorm/Add_1_output_0",
+        "onnx::MatMul_883"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/q_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/q_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.0.attention.q_lin.bias",
+        "/transformer/layer.0/attention/q_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/q_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/attention/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/attention/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/attention/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.0/attention/q_lin/Add_output_0",
+        "/transformer/layer.0/attention/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.0/attention/Reshape_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/k_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/embeddings/LayerNorm/Add_1_output_0",
+        "onnx::MatMul_899"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/k_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/k_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.0.attention.k_lin.bias",
+        "/transformer/layer.0/attention/k_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/k_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.0/attention/k_lin/Add_output_0",
+        "/transformer/layer.0/attention/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/v_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/embeddings/LayerNorm/Add_1_output_0",
+        "onnx::MatMul_900"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/v_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/v_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.0.attention.v_lin.bias",
+        "/transformer/layer.0/attention/v_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/v_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.0/attention/v_lin/Add_output_0",
+        "/transformer/layer.0/attention/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.0/attention/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Shape",
+      "op_type": "Shape",
+      "inputs": [
+        "/transformer/layer.0/attention/Transpose_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Shape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/attention/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/attention/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Slice",
+      "op_type": "Slice",
+      "inputs": [
+        "/transformer/layer.0/attention/Shape_output_0",
+        "/transformer/layer.0/attention/Constant_3_output_0",
+        "/transformer/layer.0/attention/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Slice_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.0/attention/Slice_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.0/attention/Cast_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/attention/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.0/attention/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.0/attention/Constant_5_output_0",
+        "/transformer/layer.0/attention/Cast_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Cast_2",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.0/attention/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Cast_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.0/attention/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Sqrt_1",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.0/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Sqrt_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/attention/Transpose_output_0",
+        "/transformer/layer.0/attention/Sqrt_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Sqrt_2",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.0/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Sqrt_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/attention/Transpose_2_output_0",
+        "/transformer/layer.0/attention/Sqrt_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/attention/Mul_output_0",
+        "/transformer/layer.0/attention/Mul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/attention/MatMul_output_0",
+        "/Where_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/transformer/layer.0/attention/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/attention/Softmax_output_0",
+        "/transformer/layer.0/attention/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.0/attention/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/attention/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.0/attention/Transpose_3_output_0",
+        "/transformer/layer.0/attention/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/out_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/attention/Reshape_3_output_0",
+        "onnx::MatMul_905"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/out_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/attention/out_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.0.attention.out_lin.bias",
+        "/transformer/layer.0/attention/out_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/attention/out_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/attention/out_lin/Add_output_0",
+        "/embeddings/LayerNorm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.0/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.0/Add_output_0",
+        "/transformer/layer.0/sa_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.0/sa_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.0/sa_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.0/sa_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Cast_1_output_0",
+        "transformer.layer.0.sa_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/sa_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Mul_output_0",
+        "transformer.layer.0.sa_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.0/sa_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/lin1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/sa_layer_norm/Add_1_output_0",
+        "onnx::MatMul_906"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/lin1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/lin1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.0.ffn.lin1.bias",
+        "/transformer/layer.0/ffn/lin1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/lin1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/ffn/lin1/Add_output_0",
+        "/transformer/layer.0/ffn/activation/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/ffn/lin1/Add_output_0",
+        "/transformer/layer.0/ffn/activation/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Mul_2",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/ffn/activation/Mul_1_output_0",
+        "/transformer/layer.0/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Mul_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Mul_3",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/ffn/activation/Mul_2_output_0",
+        "/transformer/layer.0/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Mul_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/ffn/lin1/Add_output_0",
+        "/transformer/layer.0/ffn/activation/Mul_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Mul_4",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/ffn/activation/Add_output_0",
+        "/transformer/layer.0/ffn/activation/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Mul_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Tanh",
+      "op_type": "Tanh",
+      "inputs": [
+        "/transformer/layer.0/ffn/activation/Mul_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Tanh_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/ffn/activation/Tanh_output_0",
+        "/transformer/layer.0/ffn/activation/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/activation/Mul_5",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/ffn/activation/Mul_output_0",
+        "/transformer/layer.0/ffn/activation/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/activation/Mul_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/lin2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/ffn/activation/Mul_5_output_0",
+        "onnx::MatMul_907"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/lin2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/ffn/lin2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.0.ffn.lin2.bias",
+        "/transformer/layer.0/ffn/lin2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/ffn/lin2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/ffn/lin2/Add_output_0",
+        "/transformer/layer.0/sa_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.0/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.0/Add_1_output_0",
+        "/transformer/layer.0/output_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Cast_output_0",
+        "/transformer/layer.0/output_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.0/output_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Cast_output_0",
+        "/transformer/layer.0/output_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Cast_1_output_0",
+        "transformer.layer.0.output_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.0/output_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Mul_output_0",
+        "transformer.layer.0.output_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.0/output_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/q_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_908"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/q_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/q_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.1.attention.q_lin.bias",
+        "/transformer/layer.1/attention/q_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/q_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/attention/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/attention/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/attention/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.1/attention/q_lin/Add_output_0",
+        "/transformer/layer.1/attention/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.1/attention/Reshape_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/k_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_924"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/k_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/k_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.1.attention.k_lin.bias",
+        "/transformer/layer.1/attention/k_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/k_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.1/attention/k_lin/Add_output_0",
+        "/transformer/layer.1/attention/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/v_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.0/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_925"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/v_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/v_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.1.attention.v_lin.bias",
+        "/transformer/layer.1/attention/v_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/v_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.1/attention/v_lin/Add_output_0",
+        "/transformer/layer.1/attention/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.1/attention/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Shape",
+      "op_type": "Shape",
+      "inputs": [
+        "/transformer/layer.1/attention/Transpose_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Shape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/attention/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/attention/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Slice",
+      "op_type": "Slice",
+      "inputs": [
+        "/transformer/layer.1/attention/Shape_output_0",
+        "/transformer/layer.1/attention/Constant_3_output_0",
+        "/transformer/layer.1/attention/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Slice_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.1/attention/Slice_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.1/attention/Cast_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/attention/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.1/attention/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.1/attention/Constant_5_output_0",
+        "/transformer/layer.1/attention/Cast_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Cast_2",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.1/attention/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Cast_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.1/attention/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Sqrt_1",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.1/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Sqrt_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/attention/Transpose_output_0",
+        "/transformer/layer.1/attention/Sqrt_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Sqrt_2",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.1/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Sqrt_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/attention/Transpose_2_output_0",
+        "/transformer/layer.1/attention/Sqrt_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/attention/Mul_output_0",
+        "/transformer/layer.1/attention/Mul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/attention/MatMul_output_0",
+        "/Where_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/transformer/layer.1/attention/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/attention/Softmax_output_0",
+        "/transformer/layer.1/attention/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.1/attention/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/attention/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.1/attention/Transpose_3_output_0",
+        "/transformer/layer.1/attention/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/out_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/attention/Reshape_3_output_0",
+        "onnx::MatMul_930"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/out_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/attention/out_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.1.attention.out_lin.bias",
+        "/transformer/layer.1/attention/out_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/attention/out_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/attention/out_lin/Add_output_0",
+        "/transformer/layer.0/output_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.1/Add_output_0",
+        "/transformer/layer.1/sa_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.1/sa_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.1/sa_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.1/sa_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Cast_1_output_0",
+        "transformer.layer.1.sa_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/sa_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Mul_output_0",
+        "transformer.layer.1.sa_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.1/sa_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/lin1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/sa_layer_norm/Add_1_output_0",
+        "onnx::MatMul_931"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/lin1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/lin1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.1.ffn.lin1.bias",
+        "/transformer/layer.1/ffn/lin1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/lin1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/ffn/lin1/Add_output_0",
+        "/transformer/layer.1/ffn/activation/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/ffn/lin1/Add_output_0",
+        "/transformer/layer.1/ffn/activation/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Mul_2",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/ffn/activation/Mul_1_output_0",
+        "/transformer/layer.1/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Mul_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Mul_3",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/ffn/activation/Mul_2_output_0",
+        "/transformer/layer.1/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Mul_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/ffn/lin1/Add_output_0",
+        "/transformer/layer.1/ffn/activation/Mul_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Mul_4",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/ffn/activation/Add_output_0",
+        "/transformer/layer.1/ffn/activation/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Mul_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Tanh",
+      "op_type": "Tanh",
+      "inputs": [
+        "/transformer/layer.1/ffn/activation/Mul_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Tanh_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/ffn/activation/Tanh_output_0",
+        "/transformer/layer.1/ffn/activation/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/activation/Mul_5",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/ffn/activation/Mul_output_0",
+        "/transformer/layer.1/ffn/activation/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/activation/Mul_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/lin2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/ffn/activation/Mul_5_output_0",
+        "onnx::MatMul_932"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/lin2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/ffn/lin2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.1.ffn.lin2.bias",
+        "/transformer/layer.1/ffn/lin2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/ffn/lin2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/ffn/lin2/Add_output_0",
+        "/transformer/layer.1/sa_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.1/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.1/Add_1_output_0",
+        "/transformer/layer.1/output_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Cast_output_0",
+        "/transformer/layer.1/output_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.1/output_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Cast_output_0",
+        "/transformer/layer.1/output_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Cast_1_output_0",
+        "transformer.layer.1.output_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.1/output_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Mul_output_0",
+        "transformer.layer.1.output_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.1/output_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/q_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_933"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/q_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/q_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.2.attention.q_lin.bias",
+        "/transformer/layer.2/attention/q_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/q_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/attention/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/attention/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/attention/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.2/attention/q_lin/Add_output_0",
+        "/transformer/layer.2/attention/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.2/attention/Reshape_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/k_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_949"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/k_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/k_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.2.attention.k_lin.bias",
+        "/transformer/layer.2/attention/k_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/k_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.2/attention/k_lin/Add_output_0",
+        "/transformer/layer.2/attention/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/v_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.1/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_950"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/v_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/v_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.2.attention.v_lin.bias",
+        "/transformer/layer.2/attention/v_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/v_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.2/attention/v_lin/Add_output_0",
+        "/transformer/layer.2/attention/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.2/attention/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Shape",
+      "op_type": "Shape",
+      "inputs": [
+        "/transformer/layer.2/attention/Transpose_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Shape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/attention/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/attention/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Slice",
+      "op_type": "Slice",
+      "inputs": [
+        "/transformer/layer.2/attention/Shape_output_0",
+        "/transformer/layer.2/attention/Constant_3_output_0",
+        "/transformer/layer.2/attention/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Slice_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.2/attention/Slice_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.2/attention/Cast_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/attention/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.2/attention/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.2/attention/Constant_5_output_0",
+        "/transformer/layer.2/attention/Cast_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Cast_2",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.2/attention/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Cast_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.2/attention/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Sqrt_1",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.2/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Sqrt_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/attention/Transpose_output_0",
+        "/transformer/layer.2/attention/Sqrt_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Sqrt_2",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.2/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Sqrt_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/attention/Transpose_2_output_0",
+        "/transformer/layer.2/attention/Sqrt_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/attention/Mul_output_0",
+        "/transformer/layer.2/attention/Mul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/attention/MatMul_output_0",
+        "/Where_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/transformer/layer.2/attention/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/attention/Softmax_output_0",
+        "/transformer/layer.2/attention/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.2/attention/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/attention/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.2/attention/Transpose_3_output_0",
+        "/transformer/layer.2/attention/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/out_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/attention/Reshape_3_output_0",
+        "onnx::MatMul_955"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/out_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/attention/out_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.2.attention.out_lin.bias",
+        "/transformer/layer.2/attention/out_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/attention/out_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/attention/out_lin/Add_output_0",
+        "/transformer/layer.1/output_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.2/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.2/Add_output_0",
+        "/transformer/layer.2/sa_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.2/sa_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.2/sa_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.2/sa_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Cast_1_output_0",
+        "transformer.layer.2.sa_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/sa_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Mul_output_0",
+        "transformer.layer.2.sa_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.2/sa_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/lin1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/sa_layer_norm/Add_1_output_0",
+        "onnx::MatMul_956"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/lin1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/lin1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.2.ffn.lin1.bias",
+        "/transformer/layer.2/ffn/lin1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/lin1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/ffn/lin1/Add_output_0",
+        "/transformer/layer.2/ffn/activation/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/ffn/lin1/Add_output_0",
+        "/transformer/layer.2/ffn/activation/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Mul_2",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/ffn/activation/Mul_1_output_0",
+        "/transformer/layer.2/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Mul_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Mul_3",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/ffn/activation/Mul_2_output_0",
+        "/transformer/layer.2/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Mul_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/ffn/lin1/Add_output_0",
+        "/transformer/layer.2/ffn/activation/Mul_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Mul_4",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/ffn/activation/Add_output_0",
+        "/transformer/layer.2/ffn/activation/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Mul_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Tanh",
+      "op_type": "Tanh",
+      "inputs": [
+        "/transformer/layer.2/ffn/activation/Mul_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Tanh_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/ffn/activation/Tanh_output_0",
+        "/transformer/layer.2/ffn/activation/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/activation/Mul_5",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/ffn/activation/Mul_output_0",
+        "/transformer/layer.2/ffn/activation/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/activation/Mul_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/lin2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/ffn/activation/Mul_5_output_0",
+        "onnx::MatMul_957"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/lin2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/ffn/lin2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.2.ffn.lin2.bias",
+        "/transformer/layer.2/ffn/lin2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/ffn/lin2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/ffn/lin2/Add_output_0",
+        "/transformer/layer.2/sa_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.2/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.2/Add_1_output_0",
+        "/transformer/layer.2/output_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Cast_output_0",
+        "/transformer/layer.2/output_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.2/output_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Cast_output_0",
+        "/transformer/layer.2/output_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Cast_1_output_0",
+        "transformer.layer.2.output_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.2/output_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Mul_output_0",
+        "transformer.layer.2.output_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.2/output_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/q_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_958"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/q_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/q_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.3.attention.q_lin.bias",
+        "/transformer/layer.3/attention/q_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/q_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/attention/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/attention/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/attention/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.3/attention/q_lin/Add_output_0",
+        "/transformer/layer.3/attention/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.3/attention/Reshape_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/k_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_974"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/k_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/k_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.3.attention.k_lin.bias",
+        "/transformer/layer.3/attention/k_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/k_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.3/attention/k_lin/Add_output_0",
+        "/transformer/layer.3/attention/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/v_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.2/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_975"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/v_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/v_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.3.attention.v_lin.bias",
+        "/transformer/layer.3/attention/v_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/v_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.3/attention/v_lin/Add_output_0",
+        "/transformer/layer.3/attention/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.3/attention/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Shape",
+      "op_type": "Shape",
+      "inputs": [
+        "/transformer/layer.3/attention/Transpose_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Shape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/attention/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/attention/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Slice",
+      "op_type": "Slice",
+      "inputs": [
+        "/transformer/layer.3/attention/Shape_output_0",
+        "/transformer/layer.3/attention/Constant_3_output_0",
+        "/transformer/layer.3/attention/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Slice_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.3/attention/Slice_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.3/attention/Cast_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/attention/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.3/attention/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.3/attention/Constant_5_output_0",
+        "/transformer/layer.3/attention/Cast_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Cast_2",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.3/attention/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Cast_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.3/attention/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Sqrt_1",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.3/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Sqrt_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/attention/Transpose_output_0",
+        "/transformer/layer.3/attention/Sqrt_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Sqrt_2",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.3/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Sqrt_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/attention/Transpose_2_output_0",
+        "/transformer/layer.3/attention/Sqrt_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/attention/Mul_output_0",
+        "/transformer/layer.3/attention/Mul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/attention/MatMul_output_0",
+        "/Where_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/transformer/layer.3/attention/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/attention/Softmax_output_0",
+        "/transformer/layer.3/attention/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.3/attention/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/attention/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.3/attention/Transpose_3_output_0",
+        "/transformer/layer.3/attention/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/out_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/attention/Reshape_3_output_0",
+        "onnx::MatMul_980"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/out_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/attention/out_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.3.attention.out_lin.bias",
+        "/transformer/layer.3/attention/out_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/attention/out_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/attention/out_lin/Add_output_0",
+        "/transformer/layer.2/output_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.3/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.3/Add_output_0",
+        "/transformer/layer.3/sa_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.3/sa_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.3/sa_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.3/sa_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Cast_1_output_0",
+        "transformer.layer.3.sa_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/sa_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Mul_output_0",
+        "transformer.layer.3.sa_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.3/sa_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/lin1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/sa_layer_norm/Add_1_output_0",
+        "onnx::MatMul_981"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/lin1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/lin1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.3.ffn.lin1.bias",
+        "/transformer/layer.3/ffn/lin1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/lin1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/ffn/lin1/Add_output_0",
+        "/transformer/layer.3/ffn/activation/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/ffn/lin1/Add_output_0",
+        "/transformer/layer.3/ffn/activation/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Mul_2",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/ffn/activation/Mul_1_output_0",
+        "/transformer/layer.3/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Mul_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Mul_3",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/ffn/activation/Mul_2_output_0",
+        "/transformer/layer.3/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Mul_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/ffn/lin1/Add_output_0",
+        "/transformer/layer.3/ffn/activation/Mul_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Mul_4",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/ffn/activation/Add_output_0",
+        "/transformer/layer.3/ffn/activation/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Mul_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Tanh",
+      "op_type": "Tanh",
+      "inputs": [
+        "/transformer/layer.3/ffn/activation/Mul_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Tanh_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/ffn/activation/Tanh_output_0",
+        "/transformer/layer.3/ffn/activation/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/activation/Mul_5",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/ffn/activation/Mul_output_0",
+        "/transformer/layer.3/ffn/activation/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/activation/Mul_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/lin2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/ffn/activation/Mul_5_output_0",
+        "onnx::MatMul_982"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/lin2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/ffn/lin2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.3.ffn.lin2.bias",
+        "/transformer/layer.3/ffn/lin2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/ffn/lin2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/ffn/lin2/Add_output_0",
+        "/transformer/layer.3/sa_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.3/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.3/Add_1_output_0",
+        "/transformer/layer.3/output_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Cast_output_0",
+        "/transformer/layer.3/output_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.3/output_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Cast_output_0",
+        "/transformer/layer.3/output_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Cast_1_output_0",
+        "transformer.layer.3.output_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.3/output_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Mul_output_0",
+        "transformer.layer.3.output_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.3/output_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/q_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_983"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/q_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/q_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.4.attention.q_lin.bias",
+        "/transformer/layer.4/attention/q_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/q_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/attention/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/attention/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/attention/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.4/attention/q_lin/Add_output_0",
+        "/transformer/layer.4/attention/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.4/attention/Reshape_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/k_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_999"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/k_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/k_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.4.attention.k_lin.bias",
+        "/transformer/layer.4/attention/k_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/k_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.4/attention/k_lin/Add_output_0",
+        "/transformer/layer.4/attention/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/v_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.3/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_1000"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/v_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/v_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.4.attention.v_lin.bias",
+        "/transformer/layer.4/attention/v_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/v_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.4/attention/v_lin/Add_output_0",
+        "/transformer/layer.4/attention/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.4/attention/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Shape",
+      "op_type": "Shape",
+      "inputs": [
+        "/transformer/layer.4/attention/Transpose_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Shape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/attention/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/attention/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Slice",
+      "op_type": "Slice",
+      "inputs": [
+        "/transformer/layer.4/attention/Shape_output_0",
+        "/transformer/layer.4/attention/Constant_3_output_0",
+        "/transformer/layer.4/attention/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Slice_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.4/attention/Slice_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.4/attention/Cast_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/attention/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.4/attention/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.4/attention/Constant_5_output_0",
+        "/transformer/layer.4/attention/Cast_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Cast_2",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.4/attention/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Cast_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.4/attention/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Sqrt_1",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.4/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Sqrt_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/attention/Transpose_output_0",
+        "/transformer/layer.4/attention/Sqrt_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Sqrt_2",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.4/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Sqrt_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/attention/Transpose_2_output_0",
+        "/transformer/layer.4/attention/Sqrt_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/attention/Mul_output_0",
+        "/transformer/layer.4/attention/Mul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/attention/MatMul_output_0",
+        "/Where_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/transformer/layer.4/attention/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/attention/Softmax_output_0",
+        "/transformer/layer.4/attention/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.4/attention/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/attention/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.4/attention/Transpose_3_output_0",
+        "/transformer/layer.4/attention/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/out_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/attention/Reshape_3_output_0",
+        "onnx::MatMul_1005"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/out_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/attention/out_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.4.attention.out_lin.bias",
+        "/transformer/layer.4/attention/out_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/attention/out_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/attention/out_lin/Add_output_0",
+        "/transformer/layer.3/output_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.4/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.4/Add_output_0",
+        "/transformer/layer.4/sa_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.4/sa_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.4/sa_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.4/sa_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Cast_1_output_0",
+        "transformer.layer.4.sa_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/sa_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Mul_output_0",
+        "transformer.layer.4.sa_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.4/sa_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/lin1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/sa_layer_norm/Add_1_output_0",
+        "onnx::MatMul_1006"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/lin1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/lin1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.4.ffn.lin1.bias",
+        "/transformer/layer.4/ffn/lin1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/lin1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/ffn/lin1/Add_output_0",
+        "/transformer/layer.4/ffn/activation/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/ffn/lin1/Add_output_0",
+        "/transformer/layer.4/ffn/activation/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Mul_2",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/ffn/activation/Mul_1_output_0",
+        "/transformer/layer.4/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Mul_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Mul_3",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/ffn/activation/Mul_2_output_0",
+        "/transformer/layer.4/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Mul_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/ffn/lin1/Add_output_0",
+        "/transformer/layer.4/ffn/activation/Mul_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Mul_4",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/ffn/activation/Add_output_0",
+        "/transformer/layer.4/ffn/activation/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Mul_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Tanh",
+      "op_type": "Tanh",
+      "inputs": [
+        "/transformer/layer.4/ffn/activation/Mul_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Tanh_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/ffn/activation/Tanh_output_0",
+        "/transformer/layer.4/ffn/activation/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/activation/Mul_5",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/ffn/activation/Mul_output_0",
+        "/transformer/layer.4/ffn/activation/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/activation/Mul_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/lin2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/ffn/activation/Mul_5_output_0",
+        "onnx::MatMul_1007"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/lin2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/ffn/lin2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.4.ffn.lin2.bias",
+        "/transformer/layer.4/ffn/lin2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/ffn/lin2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/ffn/lin2/Add_output_0",
+        "/transformer/layer.4/sa_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.4/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.4/Add_1_output_0",
+        "/transformer/layer.4/output_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Cast_output_0",
+        "/transformer/layer.4/output_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.4/output_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Cast_output_0",
+        "/transformer/layer.4/output_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Cast_1_output_0",
+        "transformer.layer.4.output_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.4/output_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Mul_output_0",
+        "transformer.layer.4.output_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.4/output_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/q_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_1008"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/q_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/q_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.5.attention.q_lin.bias",
+        "/transformer/layer.5/attention/q_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/q_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/attention/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/attention/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/attention/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.5/attention/q_lin/Add_output_0",
+        "/transformer/layer.5/attention/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.5/attention/Reshape_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/k_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_1024"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/k_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/k_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.5.attention.k_lin.bias",
+        "/transformer/layer.5/attention/k_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/k_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.5/attention/k_lin/Add_output_0",
+        "/transformer/layer.5/attention/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/v_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.4/output_layer_norm/Add_1_output_0",
+        "onnx::MatMul_1025"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/v_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/v_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.5.attention.v_lin.bias",
+        "/transformer/layer.5/attention/v_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/v_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.5/attention/v_lin/Add_output_0",
+        "/transformer/layer.5/attention/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.5/attention/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Shape",
+      "op_type": "Shape",
+      "inputs": [
+        "/transformer/layer.5/attention/Transpose_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Shape_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/attention/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/attention/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Slice",
+      "op_type": "Slice",
+      "inputs": [
+        "/transformer/layer.5/attention/Shape_output_0",
+        "/transformer/layer.5/attention/Constant_3_output_0",
+        "/transformer/layer.5/attention/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Slice_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.5/attention/Slice_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.5/attention/Cast_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/attention/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.5/attention/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.5/attention/Constant_5_output_0",
+        "/transformer/layer.5/attention/Cast_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Cast_2",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.5/attention/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Cast_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.5/attention/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Sqrt_1",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.5/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Sqrt_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/attention/Transpose_output_0",
+        "/transformer/layer.5/attention/Sqrt_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Sqrt_2",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.5/attention/Cast_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Sqrt_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/attention/Transpose_2_output_0",
+        "/transformer/layer.5/attention/Sqrt_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.5/attention/Mul_output_0",
+        "/transformer/layer.5/attention/Mul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/attention/MatMul_output_0",
+        "/Where_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/transformer/layer.5/attention/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.5/attention/Softmax_output_0",
+        "/transformer/layer.5/attention/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/transformer/layer.5/attention/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/attention/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/transformer/layer.5/attention/Transpose_3_output_0",
+        "/transformer/layer.5/attention/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/out_lin/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.5/attention/Reshape_3_output_0",
+        "onnx::MatMul_1030"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/out_lin/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/attention/out_lin/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.5.attention.out_lin.bias",
+        "/transformer/layer.5/attention/out_lin/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/attention/out_lin/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/attention/out_lin/Add_output_0",
+        "/transformer/layer.4/output_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.5/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.5/Add_output_0",
+        "/transformer/layer.5/sa_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.5/sa_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.5/sa_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Cast_output_0",
+        "/transformer/layer.5/sa_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Cast_1_output_0",
+        "transformer.layer.5.sa_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/sa_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Mul_output_0",
+        "transformer.layer.5.sa_layer_norm.bias"
+      ],
+      "outputs": [
+        "/transformer/layer.5/sa_layer_norm/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/lin1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.5/sa_layer_norm/Add_1_output_0",
+        "onnx::MatMul_1031"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/lin1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/lin1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.5.ffn.lin1.bias",
+        "/transformer/layer.5/ffn/lin1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/lin1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/ffn/lin1/Add_output_0",
+        "/transformer/layer.5/ffn/activation/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/ffn/lin1/Add_output_0",
+        "/transformer/layer.5/ffn/activation/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Mul_2",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/ffn/activation/Mul_1_output_0",
+        "/transformer/layer.5/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Mul_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Mul_3",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/ffn/activation/Mul_2_output_0",
+        "/transformer/layer.5/ffn/lin1/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Mul_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/ffn/lin1/Add_output_0",
+        "/transformer/layer.5/ffn/activation/Mul_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Mul_4",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/ffn/activation/Add_output_0",
+        "/transformer/layer.5/ffn/activation/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Mul_4_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Tanh",
+      "op_type": "Tanh",
+      "inputs": [
+        "/transformer/layer.5/ffn/activation/Mul_4_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Tanh_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/ffn/activation/Tanh_output_0",
+        "/transformer/layer.5/ffn/activation/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/activation/Mul_5",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/ffn/activation/Mul_output_0",
+        "/transformer/layer.5/ffn/activation/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/activation/Mul_5_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/lin2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/transformer/layer.5/ffn/activation/Mul_5_output_0",
+        "onnx::MatMul_1032"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/lin2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/ffn/lin2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "transformer.layer.5.ffn.lin2.bias",
+        "/transformer/layer.5/ffn/lin2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/ffn/lin2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/ffn/lin2/Add_output_0",
+        "/transformer/layer.5/sa_layer_norm/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/ReduceMean",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.5/Add_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/ReduceMean_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Sub",
+      "op_type": "Sub",
+      "inputs": [
+        "/transformer/layer.5/Add_1_output_0",
+        "/transformer/layer.5/output_layer_norm/ReduceMean_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Sub_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Cast",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Sub_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Cast_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Pow",
+      "op_type": "Pow",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Cast_output_0",
+        "/transformer/layer.5/output_layer_norm/Constant_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Pow_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/ReduceMean_1",
+      "op_type": "ReduceMean",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Pow_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/ReduceMean_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/ReduceMean_1_output_0",
+        "/transformer/layer.5/output_layer_norm/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Add_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Sqrt",
+      "op_type": "Sqrt",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Add_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Sqrt_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Cast_output_0",
+        "/transformer/layer.5/output_layer_norm/Sqrt_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Div_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Cast_1",
+      "op_type": "Cast",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Div_output_0"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Cast_1_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Cast_1_output_0",
+        "transformer.layer.5.output_layer_norm.weight"
+      ],
+      "outputs": [
+        "/transformer/layer.5/output_layer_norm/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/transformer/layer.5/output_layer_norm/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/transformer/layer.5/output_layer_norm/Mul_output_0",
+        "transformer.layer.5.output_layer_norm.bias"
+      ],
+      "outputs": [
+        "output"
+      ]
+    }
+  ]
+}
