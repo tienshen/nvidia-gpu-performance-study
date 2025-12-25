@@ -74,6 +74,8 @@ logs/
 # ONNX Runtime profiles (keep summaries)
 results/ort-cuda/profiles/
 !results/ort-cuda/profile-summary/
+results/ort-tensorrt/profiles/
+!results/ort-tensorrt/profile-summary/
 
 # TensorRT
 *.plan
