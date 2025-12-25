@@ -1,0 +1,14 @@
+Profile: results/ort-tensorrt/profiles/distilbert-base-uncased_b1_s128_gelu_fp16_b1_s128_profile.json
+Events used: 902
+Total (dur sum): 32578.33 ms
+
+Top categories by time:
+  Session: 32049.69 ms
+  Node: 528.63 ms
+
+Top 50 names by time:
+  session_initialization                                                                                                     30907.85 ms  (1 events)
+  model_run                                                                                                                    558.86 ms  (300 events)
+  SequentialExecutor::Execute                                                                                                  531.38 ms  (300 events)
+  TensorrtExecutionProvider_TRTKernel_graph_main_graph_11872393399067150122_0_0_kernel_time                                    528.63 ms  (300 events)
+  model_loading_uri                                                                                                             51.61 ms  (1 events)

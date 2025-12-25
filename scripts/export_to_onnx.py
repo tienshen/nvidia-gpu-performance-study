@@ -72,8 +72,12 @@ def main():
     
     # Determine output name
     suffix = ""
+    
+    # Add shape mode (static or dynamic)
     if args.static_shapes:
-        suffix += f"_b{args.batch}_s{args.max_length}"
+        suffix += f"_b{args.batch}_s{args.max_length}_static"
+    else:
+        suffix += "_dynamic"
     
     # Add GELU variant suffix
     if args.fast_gelu:
