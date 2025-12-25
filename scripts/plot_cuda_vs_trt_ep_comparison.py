@@ -29,7 +29,7 @@ def clean_label(model_name):
     
     if is_static:
         shape_type = 'Static'
-        name = name.replace('b1_s128_static_', '').replace('b1_s128_', '')
+        name = name.replace('b1_s128_static_', '').replace('b1_s128_', '').replace('static_', '')
     elif is_dynamic:
         shape_type = 'Dynamic'
         name = name.replace('dynamic_', '')
@@ -38,6 +38,8 @@ def clean_label(model_name):
     
     # Replace underscores with spaces and capitalize
     parts = name.split('_')
+    # Filter out 'static', 'dynamic' to avoid duplication in label
+    parts = [p for p in parts if p.lower() not in ['static', 'dynamic']]
     parts = [p.upper() if p in ['fp32', 'fp16', 'int8'] else p.title() for p in parts]
     # Handle special cases
     label = ' '.join(parts)

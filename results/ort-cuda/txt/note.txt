@@ -1,1 +1,13 @@
 lets export 2 tiny systems bert models, (dynamic axis, fp32, relu) another (static, b1, s128, fp32, relu)
+
+ort-trt
+dynamic QDQ caused memory usage exploding and crashing. Static QDQ helped stabilize memory behavior.
+However, TRT EP dequantization operations launched 25 GPU kernels per inference, doing INT8->FP32 conversion, 
+instead of one fused kernel. Each kernel hadles  tiny operations with high launch overhead.
+Atleast, the partitioning are not CPU fallbacks.
+FP16 avoids the partitioning by running everything in one fused TensorRT kernel
+
+
+static, fast-gelu, fp16 is supposed to be the highest performing model,
+combining all of the optimization techniques. 
+but in practice, t performed poorly in comparison to our other bench although it also achieve full kernel fusion
