@@ -1,13 +1,14 @@
 {
   "host": "DESKTOP-DIA8VEH",
-  "model": "distilbert-base-uncased_gelu_fp32",
+  "model": "distilbert-base-uncased_dynamic_gelu_fp32",
   "backend": "gpu",
   "batch_size": 1,
   "seq_len": 128,
-  "runs": 100,
-  "mean_latency_ms": 8.898003000000012,
-  "p50_ms": 7.872600000000007,
-  "p90_ms": 9.992020000000078,
-  "p99_ms": 24.44410399999992,
-  "throughput": 112.38476768326541
+  "runs": 250,
+  "mean_latency_ms": 8.356702000000002,
+  "std_latency_ms": 5.31643291481382,
+  "p50_ms": 7.493250000000007,
+  "p90_ms": 8.898840000000009,
+  "p99_ms": 28.43649799999996,
+  "throughput": 119.66443221261207
 }

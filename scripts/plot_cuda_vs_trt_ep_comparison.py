@@ -9,23 +9,39 @@ def load_benchmark(path):
     with open(path) as f:
         return json.load(f)
 
+def normalize_config_key(model_name):
+    """Normalize model name to a consistent configuration key for matching."""
+    # Remove distilbert prefix
+    name = model_name.replace('distilbert-base-uncased_', '')
+    # Remove static_ prefix (TRT benchmarks don't have it)
+    name = name.replace('static_', '')
+    # Remove b1_s128_ or dynamic_ prefix for simplification
+    name = name.replace('b1_s128_', '').replace('dynamic_', '')
+    return name
+
 def clean_label(model_name):
     """Convert model name to clean label."""
     name = model_name.replace('distilbert-base-uncased_', '')
     
     # Determine if static or dynamic
-    is_static = name.startswith('b1_s128_')
-    shape_type = 'Static' if is_static else 'Dynamic'
+    is_static = 'b1_s128_static' in model_name or 'b1_s128_' in model_name
+    is_dynamic = 'dynamic' in model_name
     
-    # Remove b1_s128_ prefix if present
-    name = name.replace('b1_s128_', '')
+    if is_static:
+        shape_type = 'Static'
+        name = name.replace('b1_s128_static_', '').replace('b1_s128_', '')
+    elif is_dynamic:
+        shape_type = 'Dynamic'
+        name = name.replace('dynamic_', '')
+    else:
+        shape_type = 'Static'
     
     # Replace underscores with spaces and capitalize
     parts = name.split('_')
     parts = [p.upper() if p in ['fp32', 'fp16', 'int8'] else p.title() for p in parts]
     # Handle special cases
-    label = ', '.join(parts)
-    label = label.replace('Gelu', 'GELU').replace('Fast-Gelu', 'Fast-GELU').replace('Symmetric', '')
+    label = ' '.join(parts)
+    label = label.replace('Gelu', 'GELU').replace('Fast-Gelu', 'Fast-GELU').replace('Symmetric', '').strip()
     return f"{shape_type} {label}"
 
 def main():
@@ -34,17 +50,25 @@ def main():
     cuda_benchmarks = {}
     for json_file in cuda_dir.glob("distilbert*.json"):
         data = load_benchmark(json_file)
-        cuda_benchmarks[data['model']] = data
+        config_key = normalize_config_key(data['model'])
+        cuda_benchmarks[config_key] = data
     
     # Load TensorRT EP benchmarks
     trt_dir = Path("results/ort-tensorrt/benchmarks")
     trt_benchmarks = {}
     for json_file in trt_dir.glob("distilbert*.json"):
         data = load_benchmark(json_file)
-        trt_benchmarks[data['model']] = data
+        config_key = normalize_config_key(data['model'])
+        trt_benchmarks[config_key] = data
     
-    # Find common models
-    common_models = set(cuda_benchmarks.keys()) & set(trt_benchmarks.keys())
+    # Find common configurations
+    common_configs = set(cuda_benchmarks.keys()) & set(trt_benchmarks.keys())
+    
+    if not common_configs:
+        print("Error: No matching configurations found between CUDA and TensorRT benchmarks!")
+        print(f"CUDA configs: {sorted(cuda_benchmarks.keys())}")
+        print(f"TensorRT configs: {sorted(trt_benchmarks.keys())}")
+        return
     
     # Prepare data for plotting
     configs = []
@@ -54,11 +78,12 @@ def main():
     trt_throughputs = []
     speedups = []
     
-    for model in sorted(common_models):
-        cuda_data = cuda_benchmarks[model]
-        trt_data = trt_benchmarks[model]
+    for config_key in sorted(common_configs):
+        cuda_data = cuda_benchmarks[config_key]
+        trt_data = trt_benchmarks[config_key]
         
-        configs.append(clean_label(model))
+        # Use CUDA model name for labeling (more descriptive)
+        configs.append(clean_label(cuda_data['model']))
         cuda_latencies.append(cuda_data['mean_latency_ms'])
         trt_latencies.append(trt_data['mean_latency_ms'])
         cuda_throughputs.append(cuda_data['throughput'])
@@ -132,10 +157,13 @@ def main():
         print(f"{config:<40} {cuda_latencies[i]:>10.2f}   {trt_latencies[i]:>10.2f}   {speedups[i]:>8.2f}x   {cuda_throughputs[i]:>13.1f}   {trt_throughputs[i]:>13.1f}")
     print("="*100)
     
-    avg_speedup = np.mean(speedups)
-    print(f"\nAverage TensorRT speedup: {avg_speedup:.2f}x")
-    print(f"Best speedup: {max(speedups):.2f}x ({configs[speedups.index(max(speedups))]})")
-    print(f"Worst speedup: {min(speedups):.2f}x ({configs[speedups.index(min(speedups))]})")
+    if speedups:
+        avg_speedup = np.mean(speedups)
+        print(f"\nAverage TensorRT speedup: {avg_speedup:.2f}x")
+        print(f"Best speedup: {max(speedups):.2f}x ({configs[speedups.index(max(speedups))]})")
+        print(f"Worst speedup: {min(speedups):.2f}x ({configs[speedups.index(min(speedups))]})")
+    else:
+        print("\nNo speedup data available.")
 
 if __name__ == "__main__":
     main()
