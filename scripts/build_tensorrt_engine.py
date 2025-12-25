@@ -95,10 +95,13 @@ def main():
         # Create engine in engines/ directory with descriptive name
         engine_name = onnx_path.stem
         precision = []
-        if args.fp16:
+        
+        # Only add precision suffix if not already in ONNX model name
+        if args.fp16 and "_fp16" not in engine_name:
             precision.append("fp16")
-        if args.int8:
+        if args.int8 and "_int8" not in engine_name:
             precision.append("int8")
+        
         if precision:
             engine_name += f"_{'_'.join(precision)}"
         engine_name += ".plan"

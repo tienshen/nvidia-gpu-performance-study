@@ -3,7 +3,7 @@
 
 Write-Host "Setting up TensorRT environment..." -ForegroundColor Cyan
 
-# Common TensorRT installation paths
+# Common TensorRT installation paths (including versioned directories)
 $tensorrtPaths = @(
     "C:\Program Files\NVIDIA GPU Computing Toolkit\TensorRT",
     "C:\TensorRT",
@@ -13,6 +13,8 @@ $tensorrtPaths = @(
 
 # Find TensorRT installation
 $tensorrtRoot = $null
+
+# First check exact paths
 foreach ($path in $tensorrtPaths) {
     if (Test-Path $path) {
         Write-Host "Found TensorRT at: $path" -ForegroundColor Green
@@ -21,24 +23,33 @@ foreach ($path in $tensorrtPaths) {
     }
 }
 
+# If not found, search for versioned TensorRT directories
+if (-not $tensorrtRoot) {
+    Write-Host "Searching for versioned TensorRT installations..." -ForegroundColor Yellow
+    $versionedDirs = Get-ChildItem -Path "C:\Program Files" -Filter "TensorRT-*" -Directory -ErrorAction SilentlyContinue
+    if ($versionedDirs) {
+        $tensorrtRoot = $versionedDirs[0].FullName
+        Write-Host "Found TensorRT at: $tensorrtRoot" -ForegroundColor Green
+    }
+}
+
+# If not found, search for versioned TensorRT directories
+if (-not $tensorrtRoot) {
+    Write-Host "Searching for versioned TensorRT installations..." -ForegroundColor Yellow
+    $versionedDirs = Get-ChildItem -Path "C:\Program Files" -Filter "TensorRT-*" -Directory -ErrorAction SilentlyContinue
+    if ($versionedDirs) {
+        $tensorrtRoot = $versionedDirs[0].FullName
+        Write-Host "Found TensorRT at: $tensorrtRoot" -ForegroundColor Green
+    }
+}
+
 # If not found in common locations, search for nvinfer_10.dll
 if (-not $tensorrtRoot) {
     Write-Host "Searching for TensorRT DLLs..." -ForegroundColor Yellow
-    $possibleLocations = @(
-        "C:\Program Files\NVIDIA GPU Computing Toolkit",
-        "C:\Program Files\NVIDIA",
-        "C:\Program Files (x86)\NVIDIA"
-    )
-    
-    foreach ($location in $possibleLocations) {
-        if (Test-Path $location) {
-            $foundDll = Get-ChildItem -Path $location -Filter "nvinfer*.dll" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($foundDll) {
-                $tensorrtRoot = $foundDll.Directory.Parent.FullName
-                Write-Host "Found TensorRT DLLs at: $tensorrtRoot" -ForegroundColor Green
-                break
-            }
-        }
+    $foundDll = Get-ChildItem -Path "C:\Program Files" -Filter "nvinfer*.dll" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($foundDll) {
+        $tensorrtRoot = $foundDll.Directory.Parent.FullName
+        Write-Host "Found TensorRT DLLs at: $tensorrtRoot" -ForegroundColor Green
     }
 }
 
