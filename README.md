@@ -57,7 +57,7 @@ This project answers the following practical questions:
 
 ## Methodology
 
-To avoid misleading conclusions:
+To avoid misleading conclusions profiling with Nsight Systems:
 
 - One-time initialization effects are excluded
 - Warmup runs are separated from steady-state profiling
@@ -71,15 +71,19 @@ The focus is **diagnosis**, not just benchmarking.
 
 ## Findings Summary
 
-### 1. ORT CUDA EP establishes a strong baseline
+### 1. Baseline: CPU vs ORT CUDA EP
 
 For small, fixed inference regimes (B=1, S=128), ONNX Runtime with CUDA EP already delivers high GPU utilization. Kernel execution dominates total time, and CPU overhead is modest but non-negligible.
 
 **Takeaway:** CUDA EP is not a fallback path — it is already competitive for well-supported Transformer models.
+[ort-cuda performance graph](results/ort-cuda/plots/distilbert_config_comparison.png)
 
 ---
 
-### 2. TensorRT EP and native TensorRT converge
+### 2. TensorRT EP: consistent fusion across configurations
+
+
+### 3. TensorRT EP and native TensorRT converge
 
 For static FP16 inference, **TensorRT EP and native TensorRT show nearly identical mean latency and throughput**. Differences primarily appear in tail latency (p99), not steady-state performance.
 
@@ -87,7 +91,7 @@ For static FP16 inference, **TensorRT EP and native TensorRT show nearly identic
 
 ---
 
-### 3. Kernel-level optimization reaches a ceiling quickly
+### 4. Kernel-level optimization reaches a ceiling quickly
 
 Nsight Systems analysis shows:
 
@@ -99,7 +103,7 @@ At this point, further engine-level tuning produces predictable but marginal gai
 
 ---
 
-### 4. Runtime orchestration becomes the bottleneck
+### 5. Runtime orchestration becomes the bottleneck
 
 For small, static workloads:
 
@@ -116,7 +120,7 @@ This explains why:
 
 ---
 
-### 5. CUDA Graphs address the remaining bottleneck
+### 6. CUDA Graphs address the remaining bottleneck
 
 CUDA Graph capture (a runtime-level optimization) reduces repeated CPU submission overhead by replaying a pre-recorded GPU execution graph.
 
