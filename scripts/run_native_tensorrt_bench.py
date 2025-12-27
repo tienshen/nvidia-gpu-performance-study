@@ -1,7 +1,10 @@
 import argparse
+import ctypes
 import json
 import os
 import socket
+import subprocess
+import sys
 import time
 
 import numpy as np
@@ -14,9 +17,52 @@ except ImportError as exc:
 try:
     import pycuda.driver as cuda
     import pycuda.autoinit  # noqa: F401
+    
+    # Load CUDA graph functions from driver API
+    CUDA_GRAPH_AVAILABLE = False
+    cuStreamBeginCapture = None
+    cuStreamEndCapture = None
+    cuGraphInstantiate = None
+    cuGraphLaunch = None
+    cuGraphDestroy = None
+    
+    try:
+        # Get CUDA driver function pointers
+        _libcuda = ctypes.CDLL('nvcuda.dll' if sys.platform == 'win32' else 'libcuda.so')
+        
+        # Define CUDA graph API functions
+        cuStreamBeginCapture = _libcuda.cuStreamBeginCapture
+        cuStreamBeginCapture.argtypes = [ctypes.c_void_p, ctypes.c_int]
+        cuStreamBeginCapture.restype = ctypes.c_int
+        
+        cuStreamEndCapture = _libcuda.cuStreamEndCapture
+        cuStreamEndCapture.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+        cuStreamEndCapture.restype = ctypes.c_int
+        
+        cuGraphInstantiate = _libcuda.cuGraphInstantiate_v2 if hasattr(_libcuda, 'cuGraphInstantiate_v2') else _libcuda.cuGraphInstantiate
+        cuGraphInstantiate.argtypes = [ctypes.POINTER(ctypes.c_void_p), ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t]
+        cuGraphInstantiate.restype = ctypes.c_int
+        
+        cuGraphLaunch = _libcuda.cuGraphLaunch
+        cuGraphLaunch.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+        cuGraphLaunch.restype = ctypes.c_int
+        
+        cuGraphDestroy = _libcuda.cuGraphDestroy
+        cuGraphDestroy.argtypes = [ctypes.c_void_p]
+        cuGraphDestroy.restype = ctypes.c_int
+        
+        CUDA_GRAPH_AVAILABLE = True
+    except Exception as e:
+        # Silently fail - CUDA graphs are optional
+        pass
+        
 except ImportError as exc:
     raise SystemExit("pycuda not found. Install `pycuda` and try again.") from exc
 
+
+# Configuration
+DEFAULT_WARMUP = 50
+DEFAULT_RUNS = 250
 
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
 
@@ -101,8 +147,8 @@ def _alloc_binding(engine, binding_idx, shape):
 def main():
     parser = argparse.ArgumentParser(description="Native TensorRT engine benchmark")
     parser.add_argument("--engine", required=True, help="Path to TensorRT engine (.plan)")
-    parser.add_argument("--runs", type=int, default=100, help="Timed runs")
-    parser.add_argument("--warmup", type=int, default=10, help="Warmup runs")
+    parser.add_argument("--runs", type=int, default=DEFAULT_RUNS, help=f"Timed runs (default: {DEFAULT_RUNS})")
+    parser.add_argument("--warmup", type=int, default=DEFAULT_WARMUP, help=f"Warmup runs (default: {DEFAULT_WARMUP})")
     parser.add_argument("--batch", type=int, default=1, help="Batch size (implicit batch engines only)")
     parser.add_argument(
         "--shapes",
@@ -113,7 +159,91 @@ def main():
     parser.add_argument("--seed", type=int, default=0, help="Random seed")
     parser.add_argument("--out", default=None, help="Output JSON path")
     parser.add_argument("--verbose", action="store_true", help="Print binding info")
+    parser.add_argument("--profile", action="store_true", help="Run under Nsight Systems profiler")
+    parser.add_argument("--profile-out", default=None, help="Profile output path (default: auto-generated)")
+    parser.add_argument("--cuda-graph", action="store_true", help="Use CUDA graphs for inference (reduces launch overhead)")
+    parser.add_argument("--_profiling", action="store_true", help=argparse.SUPPRESS)  # Internal flag
     args = parser.parse_args()
+    
+    # If profiling is requested, re-exec under nsys
+    if args.profile and not args._profiling:
+        # Check if nsys is available
+        try:
+            subprocess.run(["nsys", "--version"], capture_output=True, check=True)
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            print("ERROR: nsys not found. Please run setup_tensorrt_env.ps1 first.")
+            sys.exit(1)
+        
+        # Generate profile output path
+        if args.profile_out:
+            profile_path = args.profile_out
+        else:
+            engine_base = os.path.splitext(os.path.basename(args.engine))[0]
+            profile_dir = os.path.join("results", "trt-native", "profiles")
+            os.makedirs(profile_dir, exist_ok=True)
+            profile_path = os.path.join(profile_dir, engine_base)
+        
+        # Build nsys command
+        nsys_cmd = [
+            "nsys", "profile",
+            "-o", profile_path,
+            "--trace=cuda,nvtx",
+            "--cuda-memory-usage=true",
+            "--sample=none",
+            "--force-overwrite=true",
+            sys.executable,
+            *sys.argv,
+            "--_profiling"  # Internal flag to prevent re-exec loop
+        ]
+        
+        print(f"Running under Nsight Systems profiler...")
+        print(f"Profile will be saved to: {profile_path}.nsys-rep")
+        print()
+        
+        # Remove --profile and --profile-out from args to avoid passing to nested call
+        nsys_cmd = [arg for arg in nsys_cmd if not arg.startswith("--profile")]
+        
+        result = subprocess.run(nsys_cmd)
+        
+        # Generate summary reports if profile was created (even if process exit code wasn't clean)
+        profile_rep_path = f"{profile_path}.nsys-rep"
+        if os.path.exists(profile_rep_path):
+            print()
+            print("Generating profile summary reports...")
+            sys.stdout.flush()
+            
+            summary_dir = os.path.join("results", "trt-native", "profile-summary")
+            os.makedirs(summary_dir, exist_ok=True)
+            
+            engine_base = os.path.splitext(os.path.basename(args.engine))[0]
+            
+            # Export to CSV
+            csv_path = os.path.join(summary_dir, f"{engine_base}_nvtx_summary.csv")
+            try:
+                subprocess.run(
+                    ["nsys", "stats", "--force-export=true", "--report", "nvtx_sum", 
+                     "--format", "csv", "--output", csv_path, f"{profile_path}.nsys-rep"],
+                    check=True
+                )
+                print(f"  CSV summary: {csv_path}_nvtx_sum.csv")
+                sys.stdout.flush()
+            except subprocess.CalledProcessError as e:
+                print(f"  Warning: Failed to generate CSV summary: {e}")
+            
+            # Export to text
+            txt_path = os.path.join(summary_dir, f"{engine_base}_nvtx_summary.txt")
+            try:
+                subprocess.run(
+                    ["nsys", "stats", "--force-export=true", "--report", "nvtx_sum", 
+                     "--format", "table", "--output", txt_path, f"{profile_path}.nsys-rep"],
+                    check=True
+                )
+                print(f"  Text summary: {txt_path}_nvtx_sum.txt")
+                sys.stdout.flush()
+            except subprocess.CalledProcessError as e:
+                print(f"  Warning: Failed to generate text summary: {e}")
+        
+        sys.exit(result.returncode)
 
     engine_path = os.path.abspath(args.engine)
     if not os.path.exists(engine_path):
@@ -266,7 +396,7 @@ def main():
         bindings_int[i] = int(device_mem)
         bindings_ptr[i] = device_mem
 
-    def _run_once():
+    def _run_once(sync=True):
         if use_new_api:
             # TensorRT 10+ API: set tensor addresses
             for name in input_names:
@@ -299,16 +429,66 @@ def main():
                 if engine.binding_is_input(i):
                     continue
                 cuda.memcpy_dtoh_async(host_outputs[engine.get_binding_name(i)], bindings_ptr[i], stream)
-        stream.synchronize()
+        if sync:
+            stream.synchronize()
 
     # Warmup
     for _ in range(args.warmup):
         _run_once()
 
+    # CUDA graph capture if requested
+    cuda_graph = None
+    graph_exec = None
+    if args.cuda_graph:
+        if not CUDA_GRAPH_AVAILABLE:
+            print(f"Warning: CUDA graph API not available, falling back to regular execution")
+            args.cuda_graph = False
+        else:
+            try:
+                # Begin graph capture (0 = cudaStreamCaptureModeGlobal)
+                result = cuStreamBeginCapture(stream.handle, 0)
+                if result != 0:
+                    raise RuntimeError(f"cuStreamBeginCapture failed with error {result}")
+                
+                _run_once(sync=False)  # Don't synchronize during capture
+                
+                # End capture and get graph
+                graph_ptr = ctypes.c_void_p()
+                result = cuStreamEndCapture(stream.handle, ctypes.byref(graph_ptr))
+                if result != 0:
+                    raise RuntimeError(f"cuStreamEndCapture failed with error {result}")
+                cuda_graph = graph_ptr.value
+                
+                # Instantiate the graph
+                exec_ptr = ctypes.c_void_p()
+                result = cuGraphInstantiate(ctypes.byref(exec_ptr), cuda_graph, None, None, 0)
+                if result == 0:  # CUDA_SUCCESS
+                    graph_exec = exec_ptr.value
+                    print(f"CUDA graph captured and instantiated successfully")
+                else:
+                    raise RuntimeError(f"cuGraphInstantiate failed with error {result}")
+            except Exception as e:
+                print(f"Warning: CUDA graph capture failed: {e}, falling back to regular execution")
+                args.cuda_graph = False
+                if cuda_graph:
+                    try:
+                        cuGraphDestroy(cuda_graph)
+                    except:
+                        pass
+                cuda_graph = None
+                graph_exec = None
+
     latencies = []
     for _ in range(args.runs):
         start = time.perf_counter()
-        _run_once()
+        if args.cuda_graph and graph_exec:
+            # Launch the graph
+            result = cuGraphLaunch(graph_exec, stream.handle)
+            if result != 0:
+                raise RuntimeError(f"cuGraphLaunch failed with error {result}")
+            stream.synchronize()
+        else:
+            _run_once()
         end = time.perf_counter()
         latencies.append(end - start)
 
@@ -329,6 +509,7 @@ def main():
         "runs": args.runs,
         "warmup": args.warmup,
         "batch": batch_size,
+        "cuda_graph": args.cuda_graph,
         "input_shapes": input_shapes,
         "output_shapes": output_shapes,
         "mean_latency_ms": mean_ms,

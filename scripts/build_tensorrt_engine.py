@@ -12,7 +12,7 @@ except ImportError as exc:
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
 
 
-def build_engine(onnx_path, engine_path, fp16=False, int8=False, max_workspace_size=2<<30):
+def build_engine(onnx_path, engine_path, fp16=False, int8=False, max_workspace_size=2<<30, calib_samples=100):
     """Build TensorRT engine from ONNX model.
     
     Args:
@@ -56,6 +56,37 @@ def build_engine(onnx_path, engine_path, fp16=False, int8=False, max_workspace_s
             print("Warning: Platform does not support fast INT8")
         config.set_flag(trt.BuilderFlag.INT8)
         print("Enabled INT8 precision")
+        # Setup calibrator for BERT-style models
+        import numpy as np
+        class BertCalibrator(trt.IInt8MinMaxCalibrator):
+            def __init__(self, num_samples=calib_samples, batch_size=1, seq_len=128, vocab_size=30522):
+                super().__init__()
+                self.num_samples = num_samples
+                self.batch_size = batch_size
+                self.seq_len = seq_len
+                self.vocab_size = vocab_size
+                self.current = 0
+                self.input_ids = np.random.randint(0, vocab_size, size=(num_samples, batch_size, seq_len), dtype=np.int32)
+                self.attention_mask = np.ones((num_samples, batch_size, seq_len), dtype=np.int32)
+            def get_batch_size(self):
+                return self.batch_size
+            def get_batch(self, names):
+                if self.current >= self.num_samples:
+                    return None
+                batch = {}
+                for name in names:
+                    if "input_ids" in name:
+                        batch[name] = self.input_ids[self.current]
+                    elif "attention_mask" in name:
+                        batch[name] = self.attention_mask[self.current]
+                self.current += 1
+                return batch
+            def read_calibration_cache(self):
+                return None
+            def write_calibration_cache(self, cache):
+                pass
+        calibrator = BertCalibrator(num_samples=calib_samples)
+        config.int8_calibrator = calibrator
     
     # Build engine
     print("Building engine (this may take a while)...")
@@ -82,6 +113,7 @@ def main():
     parser.add_argument("--fp16", action="store_true", help="Enable FP16 precision")
     parser.add_argument("--int8", action="store_true", help="Enable INT8 precision")
     parser.add_argument("--workspace", type=int, default=2048, help="Max workspace size in MB (default: 2048)")
+    parser.add_argument("--calib-samples", type=int, default=100, help="Number of random calibration samples for INT8 (default: 100)")
     args = parser.parse_args()
     
     onnx_path = Path(args.onnx)
@@ -114,7 +146,8 @@ def main():
         str(engine_path),
         fp16=args.fp16,
         int8=args.int8,
-        max_workspace_size=workspace_bytes
+        max_workspace_size=workspace_bytes,
+        calib_samples=args.calib_samples
     )
 
 

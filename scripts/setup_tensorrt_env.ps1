@@ -124,6 +124,56 @@ if ($allFound) {
     Write-Host "You may need to install TensorRT or check your installation." -ForegroundColor Yellow
 }
 
+# Setup Nsight Systems
+Write-Host "`nSearching for Nsight Systems..." -ForegroundColor Cyan
+
+# First try to find standalone Nsight Systems installations (prefer newer versions)
+$nsysInstallations = Get-ChildItem -Path "C:\Program Files\NVIDIA Corporation" -Directory -ErrorAction SilentlyContinue | 
+    Where-Object {$_.Name -like "Nsight Systems*"} | 
+    Sort-Object Name -Descending
+
+$nsysPath = $null
+$nsysUiPath = $null
+if ($nsysInstallations) {
+    # Use the newest version (sorted descending)
+    $newestInstall = $nsysInstallations[0]
+    $nsysPath = Get-ChildItem -Path $newestInstall.FullName -Filter "nsys.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+    $nsysUiPath = Get-ChildItem -Path $newestInstall.FullName -Filter "nsys-ui.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+}
+
+# Fallback to searching anywhere if standalone not found
+if (-not $nsysPath) {
+    $nsysPath = Get-ChildItem -Path "C:\Program Files" -Filter "nsys.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+}
+if (-not $nsysUiPath) {
+    $nsysUiPath = Get-ChildItem -Path "C:\Program Files" -Filter "nsys-ui.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+}
+
+if ($nsysPath) {
+    $nsysDir = $nsysPath.DirectoryName
+    if ($env:PATH -notlike "*$nsysDir*") {
+        $env:PATH = "$nsysDir;$env:PATH"
+        Write-Host "Added Nsight Systems to PATH: $nsysDir" -ForegroundColor Green
+    } else {
+        Write-Host "Nsight Systems already in PATH" -ForegroundColor Gray
+    }
+    Write-Host "Nsight Systems: $(& $nsysPath.FullName --version 2>&1 | Select-Object -First 1)" -ForegroundColor Cyan
+} else {
+    Write-Host "Nsight Systems (nsys) not found. GPU profiling will not be available." -ForegroundColor Yellow
+}
+
+if ($nsysUiPath) {
+    $nsysUiDir = $nsysUiPath.DirectoryName
+    if ($env:PATH -notlike "*$nsysUiDir*") {
+        $env:PATH = "$nsysUiDir;$env:PATH"
+        Write-Host "Added Nsight Systems UI to PATH: $nsysUiDir" -ForegroundColor Green
+    } else {
+        Write-Host "Nsight Systems UI already in PATH" -ForegroundColor Gray
+    }
+} else {
+    Write-Host "Nsight Systems UI (nsys-ui) not found." -ForegroundColor Yellow
+}
+
 Write-Host "`nTo make these changes permanent for this session, source this script:" -ForegroundColor Yellow
 Write-Host "  . .\scripts\setup_tensorrt_env.ps1" -ForegroundColor Cyan
 Write-Host "`nTo make changes permanent across sessions, add to your PowerShell profile:" -ForegroundColor Yellow

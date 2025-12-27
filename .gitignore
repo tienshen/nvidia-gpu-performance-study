@@ -38,6 +38,7 @@ ENV/
 
 # VS Code
 .vscode/
+$PROFILE
 
 # macOS
 .DS_Store

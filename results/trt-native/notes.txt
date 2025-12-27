@@ -1,0 +1,13 @@
+
+to run bench with nsight systems profiling on:
+py -3 scripts/run_native_tensorrt_bench.py --engine engines\distilbert-base-uncased_b1_s128_static_fast-gelu_fp16.plan --runs 50 --warmup 10 --profile       
+
+to analyze profile with nsight ui:
+
+In out experiment, we see that the kernel is already fully fused and reaching performance ceiling.
+The performance gains from custom kernel at this point is likely marginal and likely to get mixed in with runtime noise. 
+The most significant gain now is cuda graph, which in experiment runs gave us 21% latency reduction and 27% throughput gains.
+Cuda graph allows runtime to Record the exact sequence of GPU operations once
+(kernel launches, memcopies, dependencies) Replay that sequence with almost zero CPU work,
+instead of CPU launch kernel for every inference. 
+Cuda graph can have great performance gains when inference patterns are repetitive
