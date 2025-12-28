@@ -82,6 +82,9 @@ For small, fixed inference regimes (B=1, S=128), ONNX Runtime with CUDA EP alrea
 
 ### 2. TensorRT EP: consistent fusion across configurations
 
+![ort-tensorrt performance graph](results/ort-tensorrt/plots/distilbert_config_comparison.png)
+
+![ort-cuda vs ort-tensorrt performance graph](results/cuda-vs-trt-ep/cuda_vs_tensorrt_comparison.png)
 
 ### 3. TensorRT EP and native TensorRT converge
 
