@@ -76,7 +76,7 @@ The focus is **diagnosis**, not just benchmarking.
 For small, fixed inference regimes (B=1, S=128), ONNX Runtime with CUDA EP already delivers high GPU utilization. Kernel execution dominates total time, and CPU overhead is modest but non-negligible.
 
 **Takeaway:** CUDA EP is not a fallback path — it is already competitive for well-supported Transformer models.
-[ort-cuda performance graph](results/ort-cuda/plots/distilbert_config_comparison.png)
+![ort-cuda performance graph](results/ort-cuda/plots/distilbert_config_comparison.png)
 
 ---
 
