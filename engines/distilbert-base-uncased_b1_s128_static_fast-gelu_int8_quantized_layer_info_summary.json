@@ -1,0 +1,52 @@
+{
+    "layer_count":  231,
+    "by_output_format_datatype":  [
+                                      {
+                                          "Row major linear FP32":  90
+                                      },
+                                      {
+                                          "Row major Int8 format":  60
+                                      },
+                                      {
+                                          "Thirty-two wide channel vectorized row major Int8 format":  30
+                                      },
+                                      {
+                                          "Float":  26
+                                      },
+                                      {
+                                          "Thirty-two wide channel vectorized row major FP32 format":  18
+                                      },
+                                      {
+                                          "Channel major FP32 format where channel % 4 == 0":  6
+                                      },
+                                      {
+                                          "Row major linear FP16 format":  1
+                                      }
+                                  ],
+    "by_layer_type":  [
+                          {
+                              "NoOp":  96
+                          },
+                          {
+                              "kgen":  26
+                          },
+                          {
+                              "PointWiseV2":  24
+                          },
+                          {
+                              "Shuffle":  24
+                          },
+                          {
+                              "CaskConvolution":  24
+                          },
+                          {
+                              "Reformat":  19
+                          },
+                          {
+                              "CaskGemmMatrixMultiply":  12
+                          },
+                          {
+                              "CaskSoftMaxV2":  6
+                          }
+                      ]
+}
