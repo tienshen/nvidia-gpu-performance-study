@@ -1,0 +1,32 @@
+{
+  "host": "DESKTOP-DIA8VEH",
+  "engine": "distilbert-base-uncased_b1_s128_static_fast-gelu_int8_quantized.plan",
+  "engine_path": "C:\\Users\\Tien\\Documents\\ml-bench-projects\\nvidia-gpu-performance-study\\engines\\distilbert-base-uncased_b1_s128_static_fast-gelu_int8_quantized.plan",
+  "runs": 250,
+  "warmup": 50,
+  "batch": null,
+  "cuda_graph": false,
+  "input_shapes": {
+    "input_ids": [
+      1,
+      128
+    ],
+    "attention_mask": [
+      1,
+      128
+    ]
+  },
+  "output_shapes": {
+    "output": [
+      1,
+      128,
+      768
+    ]
+  },
+  "mean_latency_ms": 1.7998268000000004,
+  "std_latency_ms": 0.48515458571651177,
+  "p50_ms": 1.7217999999999956,
+  "p90_ms": 2.404960000000045,
+  "p99_ms": 2.860899000000022,
+  "throughput": 555.609017489905
+}
