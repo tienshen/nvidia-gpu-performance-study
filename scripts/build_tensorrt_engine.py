@@ -1,6 +1,6 @@
 """Build TensorRT engine from ONNX model."""
 import argparse
-import os
+import subprocess
 from pathlib import Path
 
 try:
@@ -9,10 +9,76 @@ except ImportError as exc:
     raise SystemExit("TensorRT python package not found. Install `tensorrt` and try again.") from exc
 
 
-TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
+#TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
+TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
 
 
-def build_engine(onnx_path, engine_path, fp16=False, int8=False, max_workspace_size=2<<30, calib_samples=100):
+def _build_engine_with_trtexec(
+    onnx_path,
+    engine_path,
+    fp16=False,
+    int8=False,
+    max_workspace_size=2 << 30,
+    trtexec_path="trtexec",
+    min_shapes=None,
+    opt_shapes=None,
+    max_shapes=None,
+    calib_cache=None,
+    load_inputs=None,
+    dump_layer_info=False,
+    export_layer_info=None,
+    profiling_verbosity=None,
+):
+    workspace_mb = max(1, int(max_workspace_size // (1024 * 1024)))
+    cmd = [
+        trtexec_path,
+        f"--onnx={onnx_path}",
+        f"--saveEngine={engine_path}",
+        f"--memPoolSize=workspace:{workspace_mb}M",
+        # --explicitBatch is deprecated and now default for ONNX
+    ]
+    if fp16:
+        cmd.append("--fp16")
+    if int8:
+        cmd.append("--int8")
+    if min_shapes:
+        cmd.append(f"--minShapes={min_shapes}")
+    if opt_shapes:
+        cmd.append(f"--optShapes={opt_shapes}")
+    if max_shapes:
+        cmd.append(f"--maxShapes={max_shapes}")
+    if calib_cache:
+        cmd.append(f"--calib={calib_cache}")
+    if load_inputs:
+        cmd.append(f"--loadInputs={load_inputs}")
+    if dump_layer_info:
+        cmd.append("--dumpLayerInfo")
+    if export_layer_info:
+        cmd.append(f"--exportLayerInfo={export_layer_info}")
+    if profiling_verbosity:
+        cmd.append(f"--profilingVerbosity={profiling_verbosity}")
+
+    print("Running:", " ".join(cmd))
+    subprocess.run(cmd, check=True)
+
+
+def build_engine(
+    onnx_path,
+    engine_path,
+    fp16=False,
+    int8=False,
+    max_workspace_size=2<<30,
+    calib_samples=100,
+    trtexec_path="trtexec",
+    min_shapes=None,
+    opt_shapes=None,
+    max_shapes=None,
+    calib_cache=None,
+    load_inputs=None,
+    dump_layer_info=False,
+    export_layer_info=None,
+    profiling_verbosity=None,
+):
     """Build TensorRT engine from ONNX model.
     
     Args:
@@ -26,6 +92,26 @@ def build_engine(onnx_path, engine_path, fp16=False, int8=False, max_workspace_s
     print(f"  FP16: {fp16}")
     print(f"  INT8: {int8}")
     
+    if int8:
+        print("Using trtexec for INT8 build; Python calibrator is disabled.")
+        _build_engine_with_trtexec(
+            onnx_path=onnx_path,
+            engine_path=engine_path,
+            fp16=fp16,
+            int8=int8,
+            max_workspace_size=max_workspace_size,
+            trtexec_path=trtexec_path,
+            min_shapes=min_shapes,
+            opt_shapes=opt_shapes,
+            max_shapes=max_shapes,
+            calib_cache=calib_cache,
+            load_inputs=load_inputs,
+            dump_layer_info=dump_layer_info,
+            export_layer_info=export_layer_info,
+            profiling_verbosity=profiling_verbosity,
+        )
+        return
+
     builder = trt.Builder(TRT_LOGGER)
     network = builder.create_network(1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
     parser = trt.OnnxParser(network, TRT_LOGGER)
@@ -52,41 +138,7 @@ def build_engine(onnx_path, engine_path, fp16=False, int8=False, max_workspace_s
         print("Enabled FP16 precision")
     
     if int8:
-        if not builder.platform_has_fast_int8:
-            print("Warning: Platform does not support fast INT8")
-        config.set_flag(trt.BuilderFlag.INT8)
-        print("Enabled INT8 precision")
-        # Setup calibrator for BERT-style models
-        import numpy as np
-        class BertCalibrator(trt.IInt8MinMaxCalibrator):
-            def __init__(self, num_samples=calib_samples, batch_size=1, seq_len=128, vocab_size=30522):
-                super().__init__()
-                self.num_samples = num_samples
-                self.batch_size = batch_size
-                self.seq_len = seq_len
-                self.vocab_size = vocab_size
-                self.current = 0
-                self.input_ids = np.random.randint(0, vocab_size, size=(num_samples, batch_size, seq_len), dtype=np.int32)
-                self.attention_mask = np.ones((num_samples, batch_size, seq_len), dtype=np.int32)
-            def get_batch_size(self):
-                return self.batch_size
-            def get_batch(self, names):
-                if self.current >= self.num_samples:
-                    return None
-                batch = {}
-                for name in names:
-                    if "input_ids" in name:
-                        batch[name] = self.input_ids[self.current]
-                    elif "attention_mask" in name:
-                        batch[name] = self.attention_mask[self.current]
-                self.current += 1
-                return batch
-            def read_calibration_cache(self):
-                return None
-            def write_calibration_cache(self, cache):
-                pass
-        calibrator = BertCalibrator(num_samples=calib_samples)
-        config.int8_calibrator = calibrator
+        raise RuntimeError("INT8 build uses trtexec; rerun with --int8 to trigger it.")
     
     # Build engine
     print("Building engine (this may take a while)...")
@@ -113,7 +165,16 @@ def main():
     parser.add_argument("--fp16", action="store_true", help="Enable FP16 precision")
     parser.add_argument("--int8", action="store_true", help="Enable INT8 precision")
     parser.add_argument("--workspace", type=int, default=2048, help="Max workspace size in MB (default: 2048)")
-    parser.add_argument("--calib-samples", type=int, default=100, help="Number of random calibration samples for INT8 (default: 100)")
+    parser.add_argument("--calib-samples", type=int, default=100, help="Number of random calibration samples for INT8 (ignored when using trtexec)")
+    parser.add_argument("--trtexec", default="trtexec", help="Path to trtexec executable (default: trtexec)")
+    parser.add_argument("--min-shapes", default=None, help="minShapes for trtexec, e.g. input_ids:1x128,attention_mask:1x128")
+    parser.add_argument("--opt-shapes", default=None, help="optShapes for trtexec, e.g. input_ids:1x128,attention_mask:1x128")
+    parser.add_argument("--max-shapes", default=None, help="maxShapes for trtexec, e.g. input_ids:1x128,attention_mask:1x128")
+    parser.add_argument("--calib-cache", default=None, help="Calibration cache path for trtexec INT8 builds")
+    parser.add_argument("--load-inputs", default=None, help="trtexec --loadInputs string for calibration/inference data")
+    parser.add_argument("--dump-layer-info", action="store_true", help="Pass --dumpLayerInfo to trtexec")
+    parser.add_argument("--export-layer-info", default=None, help="Pass --exportLayerInfo=<path> to trtexec")
+    parser.add_argument("--profiling-verbosity", default=None, help="Pass --profilingVerbosity=<level> to trtexec")
     args = parser.parse_args()
     
     onnx_path = Path(args.onnx)
@@ -123,6 +184,7 @@ def main():
     # Generate output path if not specified
     if args.output:
         engine_path = Path(args.output)
+        engine_name = engine_path.stem
     else:
         # Create engine in engines/ directory with descriptive name
         engine_name = onnx_path.stem
@@ -139,6 +201,10 @@ def main():
         engine_name += ".plan"
         
         engine_path = Path("engines") / engine_name
+
+    export_layer_info = args.export_layer_info
+    if args.dump_layer_info and not export_layer_info:
+        export_layer_info = str(Path("engines") / f"{engine_name}_layer_info.json")
     
     workspace_bytes = args.workspace * 1024 * 1024
     build_engine(
@@ -147,7 +213,16 @@ def main():
         fp16=args.fp16,
         int8=args.int8,
         max_workspace_size=workspace_bytes,
-        calib_samples=args.calib_samples
+        calib_samples=args.calib_samples,
+        trtexec_path=args.trtexec,
+        min_shapes=args.min_shapes,
+        opt_shapes=args.opt_shapes,
+        max_shapes=args.max_shapes,
+        calib_cache=args.calib_cache,
+        load_inputs=args.load_inputs,
+        dump_layer_info=args.dump_layer_info,
+        export_layer_info=export_layer_info,
+        profiling_verbosity=args.profiling_verbosity,
     )
 
 
